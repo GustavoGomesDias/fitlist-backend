@@ -23,6 +23,9 @@ model user {
 model plan {
   id       String     @id @default(uuid())
   day      Int
+  rest     Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
   exercism exercism[]
   userId   String
   user     user       @relation(fields: [userId], references: [id])
@@ -30,9 +33,12 @@ model plan {
 
 model exercism {
   id          String @id @default(uuid())
+  sequence    Int
   time        Int?
   series      Int?
   repetitions Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
   planId      String
   plan        plan   @relation(fields: [planId], references: [id])
 }
