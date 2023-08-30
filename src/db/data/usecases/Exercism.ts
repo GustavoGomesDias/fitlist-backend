@@ -1,6 +1,6 @@
 import { Exercism } from '@models/Exercism';
 import UpdateUseCase from './UpdateUseCase';
 
-export type CreateUser = Omit<Exercism, 'id'>;
+export type CreateExercism = Omit<Exercism, 'id'>;
 
-export type UpdateUser = UpdateUseCase<Exercism, 'id'>;
+export type UpdateExercism = UpdateUseCase<Exercism, 'id'>;
