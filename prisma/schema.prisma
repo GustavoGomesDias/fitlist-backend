@@ -11,34 +11,56 @@ datasource db {
 }
 
 model user {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  plan      plan[]
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  password     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  trainingPlan trainingPlan[]
+  // sharedTrainingPlan sharedTrainingPlan[]
 }
 
-model plan {
-  id       String     @id @default(uuid())
-  day      Int
-  rest     Boolean
+model trainingPlan {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  userId      String
+  user        user          @relation(fields: [userId], references: [id])
+  weekDayPlan weekDayPlan[]
+  // sharedTrainingPlan sharedTrainingPlan[]
+}
+
+// TODO: Make shareble training plan
+// model sharedTrainingPlan {
+//   id String @id @default(uuid())
+
+//   sharedUserId String
+//   sharedUser   user         @relation(fields: [sharedUserId], references: [id])
+//   sharedPlanId String
+//   sharedPlan   trainingPlan @relation(fields: [sharedPlanId], references: [id])
+// }
+
+model weekDayPlan {
+  id        String   @id @default(uuid())
+  day       Int      @unique
+  rest      Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  exercism exercism[]
-  userId   String
-  user     user       @relation(fields: [userId], references: [id])
+
+  trainingPlanId String
+  trainingPlan   trainingPlan @relation(fields: [trainingPlanId], references: [id])
+  exercism       exercism[]
 }
 
 model exercism {
-  id          String @id @default(uuid())
-  sequence    Int
-  time        Int?
-  series      Int?
-  repetitions Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  planId      String
-  plan        plan   @relation(fields: [planId], references: [id])
+  id            String      @id @default(uuid())
+  sequence      Int
+  time          Int?
+  series        Int?
+  repetitions   Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  weekDayPlanId String
+  weekDayPlan   weekDayPlan @relation(fields: [weekDayPlanId], references: [id])
 }
