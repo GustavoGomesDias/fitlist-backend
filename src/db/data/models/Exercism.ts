@@ -4,5 +4,5 @@ export interface Exercism {
     time?: number
     series?: number
     repetitions: number
-    planId: string
+    weekDayPlanId: string
 }
