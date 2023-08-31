@@ -32,9 +32,3 @@ export const isValidObject = (obj: Record<any, any>) => {
 
     return true;
 };
-
-export const validateMail = (email: string): boolean => {
-    const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-
-    return regex.test(email);
-};
