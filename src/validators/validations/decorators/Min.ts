@@ -1,4 +1,5 @@
 import { BadRequestErr } from '@http-errors';
+import { isInvalidField } from '../validations';
 
 export const Min = (limit: number, property: string) => function (target: object, propertyKey: string) {
 	let value: string;
@@ -6,7 +7,8 @@ export const Min = (limit: number, property: string) => function (target: object
 		return value;
 	};
 	const setter = function (newVal: string) {
-		if (newVal.length < limit) {
+		
+		if (isInvalidField(newVal) || newVal.length < limit) {
 			throw new BadRequestErr(`O tamanho de ${property} precisa ser maior que ${limit}.`);
 		} else {
 			value = newVal;
