@@ -10,6 +10,8 @@ export const Inject = (injections: string[]) => function injectionTarget <T exte
   
           return Container.get(key);
         });
+
+        constructor.prototype.className = constructor.name
         super(...injectedArgs);
       }
     };
