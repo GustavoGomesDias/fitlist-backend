@@ -9,6 +9,7 @@ import UserDTO from '../DTOS/user/UserDTO';
 import UpdateUserDTO from '../DTOS/user/UpdateUserDTO';
 import { User } from '@models/User';
 import { IEncrypt } from '@services/adapters/IEncrypt';
+import { AuthRequired } from '../decorators/auth';
 
 
 @Inject(['UserDAOImp', 'Encrypt'])
@@ -47,7 +48,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
         }
 
         return {
-            statusCode: 404,
+            statusCode: 400,
             body: {
                 message: 'Corpo da requisição vazio.'
             }
@@ -56,6 +57,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
 
 
     @Catch()
+    @AuthRequired()
     @Put('/')
     async update(req: IRequest<UpdateUser>): Promise<IResponse> {
         if (req.body) {
@@ -74,7 +76,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
         }
 
         return {
-            statusCode: 404,
+            statusCode: 400,
             body: {
                 message: 'Corpo da requisição vazio.'
             }
@@ -91,13 +93,17 @@ export default class UserController implements IController<CreateUser, UpdateUse
             return {
                 statusCode: 200,
                 body: {
-                    content: user,
+                    content: {
+                        email: user.email,
+                        name: user.name,
+                        id: user.id,
+                    },
                 },
             };
         }
 
         return {
-            statusCode: 404,
+            statusCode: 400,
             body: {
                 message: 'Usuário não existe.',
             },
@@ -105,6 +111,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
     }
 
     @Catch()
+    @AuthRequired()
     @Delete('/:id')
     async delete(req: IRequest<unknown>): Promise<IResponse> {
         const userId = (req.params as { [key: string]: string }).id;
