@@ -8,16 +8,19 @@ import Catch from 'error-handler';
 import UserDTO from '../DTOS/user/UserDTO';
 import UpdateUserDTO from '../DTOS/user/UpdateUserDTO';
 import { User } from '@models/User';
+import { IEncrypt } from '@services/adapters/IEncrypt';
 
 
-@Inject(['UserDAOImp'])
+@Inject(['UserDAOImp', 'Encrypt'])
 @Route('/user')
 export default class UserController implements IController<CreateUser, UpdateUser> {
 
     private entityDAO: UserDAOImp;
+    private encryptService: IEncrypt;
 
-    constructor(entityDAO?: UserDAOImp) {
+    constructor(entityDAO?: UserDAOImp, encrypt?: IEncrypt) {
         this.entityDAO = entityDAO as UserDAOImp;
+        this.encryptService = encrypt as IEncrypt;
     }
 
     @Catch()
@@ -27,10 +30,12 @@ export default class UserController implements IController<CreateUser, UpdateUse
             const { email, name, password } = req.body;
             new UserDTO(name, password, email)
 
+            const hash = await this.encryptService.encrypt(password, 12);
+
             await this.entityDAO.add({
                 email,
                 name,
-                password,
+                password: hash,
             });
 
             return {
