@@ -8,7 +8,7 @@ export class GenericDAOImp<C, R, U, D> implements IGenericDAO<C, R, U, D> {
         this.entity = entity;
     }
 
-    async findById(id: number): Promise<unknown> {
+    async findById(id: string): Promise<unknown> {
         const result = await this.entity.findUnique({
             where: {
                 id
@@ -30,7 +30,7 @@ export class GenericDAOImp<C, R, U, D> implements IGenericDAO<C, R, U, D> {
 
     async update(data: U): Promise<void> {
         const { id, ...rest } = (data as { [key: string]: U });
-        const result = await this.entity.update({
+        await this.entity.update({
 			where: {
 				id: id as string
 			},
