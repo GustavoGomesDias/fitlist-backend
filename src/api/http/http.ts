@@ -5,6 +5,8 @@ export interface IRequest<UseCase = unknown> {
     headers?: {
       authorization?: string
     }
+
+    userId?: string
   }
 
   export interface IResponse {
