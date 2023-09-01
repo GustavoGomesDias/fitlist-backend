@@ -87,10 +87,19 @@ export default class UserController implements IController<CreateUser, UpdateUse
         const userId = (req.params as { [key: string]: string }).id;
         const user = await this.entityDAO.findById(userId) as User;
 
+        if (user) {
+            return {
+                statusCode: 200,
+                body: {
+                    content: user,
+                },
+            };
+        }
+
         return {
-            statusCode: 200,
+            statusCode: 404,
             body: {
-                content: user,
+                message: 'Usuário não existe.',
             },
         };
     }
