@@ -38,7 +38,7 @@ export const Put = (path: string) => (target: any, key: string, descriptor: Prop
  * @description Assign router with delete method
  */
 export const Delete = (path: string) => (target: any, key: string, descriptor: PropertyDescriptor): void => {
-	RouterControl.registerRouters(`${target.prototype.className}`, {
+	RouterControl.registerRouters(`${target.prototype.name}`, {
 		method: 'delete',
 		path,
 		controllerMethod: key,
