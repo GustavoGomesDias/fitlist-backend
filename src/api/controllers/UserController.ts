@@ -10,6 +10,7 @@ import UpdateUserDTO from '../DTOS/user/UpdateUserDTO';
 import { User } from '@models/User';
 import { IEncrypt } from '@services/adapters/IEncrypt';
 import { AuthRequired } from '../decorators/auth';
+import { CheckUser } from '@validations';
 
 
 @Inject(['UserDAOImp', 'Encrypt'])
@@ -58,6 +59,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
 
     @Catch()
     @AuthRequired()
+    @CheckUser({ type: 'body' })
     @Put('/')
     async update(req: IRequest<UpdateUser>): Promise<IResponse> {
         if (req.body) {
@@ -112,6 +114,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
 
     @Catch()
     @AuthRequired()
+    @CheckUser({ type: 'params' })
     @Delete('/:id')
     async delete(req: IRequest<unknown>): Promise<IResponse> {
         const userId = (req.params as { [key: string]: string }).id;
