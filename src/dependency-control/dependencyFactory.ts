@@ -1,6 +1,6 @@
 import BcryptServices from '@services/BcryptService';
 import Container from './Container';
-import { UserDAOImp } from '@DAO';
+import { TrainingPlanDAOImp, UserDAOImp } from '@DAO';
 
 export const dependencyFactory = (): void => {
     // Services
@@ -8,4 +8,5 @@ export const dependencyFactory = (): void => {
   
     // Persistence
     Container.register('UserDAOImp', new UserDAOImp());
+    Container.register('TrainingPlanDAOImp', new TrainingPlanDAOImp());
   };

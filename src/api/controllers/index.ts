@@ -1,3 +1,4 @@
 import UserController from './UserController';
+import TrainingPlanController from './TrainingPlanController';
 
-export default [UserController];
+export default [UserController, TrainingPlanController];
