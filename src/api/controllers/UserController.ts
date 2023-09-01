@@ -2,7 +2,7 @@ import { UserDAOImp } from '@DAO';
 import { IController } from './IController';
 import { Inject } from '@di';
 import { IRequest, IResponse } from '@http';
-import { Get, Post, Route } from '@routes-decorator';
+import { Delete, Get, Post, Put, Route } from '@routes-decorator';
 import { CreateUser, UpdateUser } from '@usecases/UserUseCase';
 import Catch from 'error-handler';
 
@@ -17,29 +17,27 @@ export default class UserController implements IController<CreateUser, UpdateUse
         this.entityDAO = entityDAO as UserDAOImp;
     }
 
-    @Get('/')
-    test(req: IRequest): IResponse {
-        return  {
-            statusCode: 200,
-            body: {
-                message: 'Tested',
-            }
-        }
-    }
-
-    // @Catch()
-    // @Post('/')
+    @Catch()
+    @Post('/')
     async create(req: IRequest<CreateUser>): Promise<IResponse> {
         throw new Error('Method not implemented.');
     }
 
 
+    @Catch()
+    @Put('/')
     update(req: IRequest<UpdateUser>): Promise<IResponse> {
         throw new Error('Method not implemented.');
     }
+
+    @Catch()
+    @Get('/')
     findById(req: IRequest<unknown>): Promise<IResponse> {
         throw new Error('Method not implemented.');
     }
+
+    @Catch()
+    @Delete('/')
     delete(req: IRequest<unknown>): Promise<IResponse> {
         throw new Error('Method not implemented.');
     }

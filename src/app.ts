@@ -26,10 +26,8 @@ class App {
 			const instance = new Controller();
 			const routes: IApiRouterDefinition[] = RouterControl.getRouters(instance.constructor.name) as IApiRouterDefinition[];
 
-			// TODO: Por conta do Inject a classe se torna anônima quando chega aqui, aí ela acaba sem nome
 			const prefix: string = RouterControl.getPrefix(instance.constructor.name) as string;
 			for (const route of routes) {
-				// eslint-disable-next-line no-return-await
 				router[route.method](`${route.path}`, async (req, res) => {
 					const response = await instance[String(route.controllerMethod) as keyof typeof instance](req) as IResponse;
 					return res.status(response.statusCode).json({ body: response.body });
