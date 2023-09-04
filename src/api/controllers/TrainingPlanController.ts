@@ -9,6 +9,7 @@ import TrainingPlanDTO from '../DTOS/trainingPlan/TrainingPlanDTO';
 import UpdateTrainingPlanDTO from '../DTOS/trainingPlan/UpdateTrainingPlanDTO';
 import { TrainingPlan } from '@models/TrainingPlan';
 import { CheckUser } from '@validations';
+import { AuthRequired } from '../decorators/auth';
 
 @Inject(['TrainingPlanDAOImp'])
 @Route('/trainingPlan')
@@ -22,6 +23,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
 
     @Catch()
     @Post('/')
+    @AuthRequired()
     async create(req: IRequest<CreateTrainingPlan>): Promise<IResponse> {
         if (req.body) {
             const { name, userId, description } = req.body;
@@ -52,6 +54,8 @@ export default class TrainingPlanController implements IController<CreateTrainin
 
     @Catch()
     @Put('/')
+    @AuthRequired()
+    @CheckUser({ type: 'body' })
     async update(req: IRequest<UpdateTrainingPlan>): Promise<IResponse> {
         if (req.body) {
             const { id, userId, name } = req.body;
@@ -78,6 +82,8 @@ export default class TrainingPlanController implements IController<CreateTrainin
 
     @Catch()
     @Get('/:id')
+    @AuthRequired()
+    @CheckUser({ type: 'params' })
     async findById(req: IRequest<unknown>): Promise<IResponse> {
         const planId = (req.params as { [key: string]: string }).id;
         const trainingPlan = await this.entityDAO.findById(planId) as TrainingPlan;
@@ -101,6 +107,8 @@ export default class TrainingPlanController implements IController<CreateTrainin
 
     @Catch()
     @Delete('/:id')
+    @AuthRequired()
+    @CheckUser({ type: 'params' })
     async delete(req: IRequest<unknown>): Promise<IResponse> {
         const planId = (req.params as { [key: string]: string }).id;
         await this.entityDAO.delete(planId);
@@ -114,6 +122,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
     }
     @Catch()
     @Get('/all/:userId')
+    @AuthRequired()
     async findAllByUserId(req: IRequest): Promise<IResponse> {
         const userId = (req.params as { [key: string]: string }).id;
         const trainingPlans = await this.entityDAO.findAllByUserId(userId)
