@@ -133,9 +133,32 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
     }
 
     @Catch()
+    @AuthRequired()
     @Delete('/:id')
     async delete(req: IRequest<unknown>): Promise<IResponse> {
-        throw new Error('Method not implemented.');
+        const weekDayPlanId = (req.params as { [key: string]: string }).id;
+
+        const weekDayPlan = await this.entityDAO.findById(weekDayPlanId) as WeekDayPlan;
+
+        const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(0, weekDayPlan.trainingPlanId) as CheckWekDayPlanAndUser;
+
+        if (req.userId === trainingInfo.user.id) {
+
+            await this.entityDAO.delete(weekDayPlanId);
+            return {
+                statusCode: 200,
+                body: {
+                    message: 'Plano de exercícios deletado.',
+                },
+            };
+        }
+
+        return {
+            statusCode: 401,
+            body: {
+                error: 'Você não tem autorização para acessar este dado.',
+            }
+        }
     }
     
 }
