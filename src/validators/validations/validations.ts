@@ -1,4 +1,4 @@
-export const isInvalidField = (field: unknown) => (field as string).trim() === '' || field === null || field === undefined;
+export const isInvalidField = (field: unknown) => (field as string) === '' || field === null || field === undefined || field == ' ';
 
 export function isEmptyObject(obj: object) {
     for (const property in obj) {
@@ -32,3 +32,5 @@ export const isValidObject = (obj: Record<any, any>) => {
 
     return true;
 };
+
+export const notUndefined = (field: unknown) => field !== undefined && field !== null;

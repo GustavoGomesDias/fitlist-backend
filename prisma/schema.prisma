@@ -43,7 +43,7 @@ model trainingPlan {
 
 model weekDayPlan {
   id        String   @id @default(uuid())
-  day       Int      @unique
+  day       Int
   rest      Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
