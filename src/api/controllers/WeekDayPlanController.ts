@@ -10,6 +10,7 @@ import { AuthRequired } from '../decorators/auth';
 import WeekDayPlanDTO from '../DTOS/weekDayPlan/WeekDayPlanDTO';
 import UpdateWeekDayPlanDTO from '../DTOS/weekDayPlan/UpdateWeekDayPlanDTO';
 import { CheckUser } from '@validations';
+import { WeekDayPlan } from '@models/WeekDayPlan';
 
 @Inject(['WeekDayPlanDAOImp', 'TrainingPlanDAOImp'])
 @Route('/weekdayplan')
@@ -30,21 +31,21 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
         if (req.body) {
             const { day, rest, trainingPlanId } = req.body;
             new WeekDayPlanDTO(rest, day, trainingPlanId);
-            const dayExists = await this.trainingDAO.checkIfDayExists(day, trainingPlanId) as CheckWekDayPlanAndUser;
+            const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(day, trainingPlanId) as CheckWekDayPlanAndUser;
 
-            if (dayExists.weekDayPlan.length > 0) {
+            if (trainingInfo.weekDayPlan.length > 0) {
                 return {
                     statusCode: 400,
                     body: {
-                        message: 'Já existe um plano para o dia em questão.',
+                        error: 'Já existe um plano para o dia em questão.',
                     },
                 };
             }
 
-            if (req.userId === dayExists.user.id) {
+            if (req.userId === trainingInfo.user.id) {
                 await this.entityDAO.add(req.body);
                 return {
-                    statusCode: 200,
+                    statusCode: 201,
                     body: {
                         message: 'Plano para o dia da semana criado com sucesso!',
                     },
@@ -54,7 +55,7 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
             return {
                 statusCode: 401,
                 body: {
-                    message: 'Você não tem permissão para realizar essa função.',
+                    error: 'Você não tem permissão para realizar essa função.',
                 },
             };
 
@@ -63,7 +64,7 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
          return {
             statusCode: 400,
             body: {
-                message: 'Requisição sem corpo!'
+                error: 'Requisição sem corpo!'
             }
          }
     }
@@ -75,9 +76,9 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
         if (req.body) {
             const { id, day, rest, trainingPlanId } = req.body;
             new UpdateWeekDayPlanDTO(id as string, trainingPlanId as string, rest as boolean, day as number);
-            const dayExists = await this.trainingDAO.checkIfDayExists(day as number, trainingPlanId) as CheckWekDayPlanAndUser;
+            const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(day as number, trainingPlanId) as CheckWekDayPlanAndUser;
 
-            if (req.userId === dayExists.user.id) {
+            if (req.userId === trainingInfo.user.id) {
                 await this.entityDAO.update(req.body);
                 return {
                     statusCode: 200,
@@ -99,15 +100,38 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
          return {
             statusCode: 400,
             body: {
-                message: 'Requisição sem corpo!'
+                error: 'Requisição sem corpo!'
             }
          }
     }
     
     @Catch()
+    @AuthRequired()
     @Get('/:id')
     async findById(req: IRequest<unknown>): Promise<IResponse> {
-        throw new Error('Method not implemented.');
+        const weekDayPlanId = (req.params as { [key: string]: string }).id;
+
+        const weekDayPlan = await this.entityDAO.findById(weekDayPlanId) as WeekDayPlan;
+
+        const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(0, weekDayPlan.trainingPlanId) as CheckWekDayPlanAndUser;
+
+        console.log(trainingInfo);
+
+        if (req.userId === trainingInfo.user.id) {
+            return {
+                statusCode: 200,
+                body: {
+                    content: weekDayPlan,
+                },
+            };
+        }
+
+        return {
+            statusCode: 401,
+            body: {
+                error: 'Você não tem autorização para acessar este dado.',
+            }
+        }
     }
 
     @Catch()
