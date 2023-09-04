@@ -67,7 +67,7 @@ export default class LoginController implements IController {
                 return {
                     statusCode: 401,
                     body: {
-                        message: 'Usuário inválido.',
+                        error: 'Usuário inválido.',
                     },
                 };
 
@@ -77,7 +77,7 @@ export default class LoginController implements IController {
             return {
                 statusCode: 401,
                 body: {
-                    message: 'Usuário inválido.',
+                    error: 'Usuário inválido.',
                 },
             };
         }
@@ -85,7 +85,7 @@ export default class LoginController implements IController {
         return {
             statusCode: 400,
             body: {
-                message: 'Requisição vazia!',
+                error: 'Requisição vazia.',
             },
         };
     }

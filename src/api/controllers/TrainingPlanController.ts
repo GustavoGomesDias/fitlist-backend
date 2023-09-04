@@ -47,7 +47,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         return {
             statusCode: 400,
             body: {
-                message: 'Corpo da requisição vazio.'
+                error: 'Corpo da requisição vazio.'
             }
         }
     }
@@ -75,7 +75,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         return {
             statusCode: 400,
             body: {
-                message: 'Corpo da requisição vazio.'
+                error: 'Corpo da requisição vazio.'
             }
         }
     }
@@ -100,7 +100,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         return {
             statusCode: 400,
             body: {
-                message: 'Plano de treino não existe.',
+                error: 'Plano de treino não existe.',
             },
         };
     }
@@ -139,7 +139,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         return {
             statusCode: 400,
             body: {
-                message: 'Plano de treino não existe.',
+                error: 'Plano de treino não existe.',
             },
         };
     }

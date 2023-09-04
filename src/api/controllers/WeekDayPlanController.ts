@@ -115,8 +115,6 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
 
         const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(0, weekDayPlan.trainingPlanId) as CheckWekDayPlanAndUser;
 
-        console.log(trainingInfo);
-
         if (req.userId === trainingInfo.user.id) {
             return {
                 statusCode: 200,

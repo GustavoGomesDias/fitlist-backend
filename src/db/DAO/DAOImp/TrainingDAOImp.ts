@@ -25,7 +25,7 @@ export class TrainingPlanDAOImp extends GenericDAOImp<
     }
 
 
-    async checkIfDayExists(day: number, trainingPlanId: string): Promise<unknown> {
+    async checkTrainingInfoWithDay(day: number, trainingPlanId: string): Promise<unknown> {
         const result = await this.entity.findUnique({
             where: {
                 id: trainingPlanId,

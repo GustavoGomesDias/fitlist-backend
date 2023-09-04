@@ -51,7 +51,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
         return {
             statusCode: 400,
             body: {
-                message: 'Corpo da requisição vazio.'
+                error: 'Corpo da requisição vazio.'
             }
         }
     }
@@ -80,7 +80,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
         return {
             statusCode: 400,
             body: {
-                message: 'Corpo da requisição vazio.'
+                error: 'Corpo da requisição vazio.'
             }
         }
     }
@@ -107,7 +107,7 @@ export default class UserController implements IController<CreateUser, UpdateUse
         return {
             statusCode: 400,
             body: {
-                message: 'Usuário não existe.',
+                error: 'Usuário não existe.',
             },
         };
     }
