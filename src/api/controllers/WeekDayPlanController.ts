@@ -5,6 +5,9 @@ import { TrainingPlanDAOImp, WeekDayPlanDAOImp } from '@DAO';
 import { Delete, Get, Post, Put, Route } from '@routes-decorator';
 import { Inject } from '@di';
 import Catch from 'error-handler';
+import { CheckWekDayPlanAndUser } from '@usecases/TrainingPlanUseCase';
+import { AuthRequired } from '../decorators/auth';
+import WeekDayPlanDTO from '../DTOS/WeekDayPlanDTO';
 
 @Inject(['WeekDayPlanDAOImp', 'TrainingPlanDAOImp'])
 @Route('/weekdayplan')
@@ -19,18 +22,46 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
     }
 
     @Catch()
+    @AuthRequired()
     @Post('/')
     async create(req: IRequest<CreateWeekDayPlan>): Promise<IResponse> {
         if (req.body) {
-            const { weekday, rest, trainingPlanId } = req.body;
-            const checkIfDayExists = await this.trainingDAO.checkIfDayExists(weekday, trainingPlanId)
-            // if ()
+            const { day, rest, trainingPlanId } = req.body;
+            new WeekDayPlanDTO(rest, day, trainingPlanId);
+            const dayExists = await this.trainingDAO.checkIfDayExists(day, trainingPlanId) as CheckWekDayPlanAndUser;
+
+            if (dayExists.weekDayPlan.length > 0) {
+                return {
+                    statusCode: 400,
+                    body: {
+                        message: 'Já existe um plano para o dia em questão.',
+                    },
+                };
+            }
+
+            if (req.userId == dayExists.user.id) {
+                await this.entityDAO.add(req.body);
+                return {
+                    statusCode: 200,
+                    body: {
+                        message: 'Plano para o dia da semana criado com sucesso!',
+                    },
+                };
+            }
+
+            return {
+                statusCode: 401,
+                body: {
+                    message: 'Você não tem permissão para realizar essa função.',
+                },
+            };
+
          }
 
          return {
-            statusCode: 200,
+            statusCode: 400,
             body: {
-                message: 'ok'
+                message: 'Requisição sem corpo!'
             }
          }
     }

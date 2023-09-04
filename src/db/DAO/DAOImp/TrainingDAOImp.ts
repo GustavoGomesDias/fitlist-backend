@@ -25,7 +25,7 @@ export class TrainingPlanDAOImp extends GenericDAOImp<
     }
 
 
-    async checkIfDayExists(day: number, trainingPlanId: string): Promise<boolean> {
+    async checkIfDayExists(day: number, trainingPlanId: string): Promise<unknown> {
         const result = await this.entity.findUnique({
             where: {
                 id: trainingPlanId,
@@ -35,11 +35,17 @@ export class TrainingPlanDAOImp extends GenericDAOImp<
                 weekDayPlan: {
                     where: {
                         day,
+                    },
+                },
+
+                user: {
+                    select: {
+                        id: true
                     }
                 }
             }
-        })
+        });
 
-        return result !== undefined && result !== null;
+        return result;
     }
 }

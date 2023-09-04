@@ -1,6 +1,6 @@
 export interface WeekDayPlan {
     id: string
     rest: boolean
-    weekday: number
+    day: number
     trainingPlanId: string
 }
