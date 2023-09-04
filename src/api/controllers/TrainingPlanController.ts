@@ -8,6 +8,7 @@ import Catch from 'error-handler';
 import TrainingPlanDTO from '../DTOS/trainingPlan/TrainingPlanDTO';
 import UpdateTrainingPlanDTO from '../DTOS/trainingPlan/UpdateTrainingPlanDTO';
 import { TrainingPlan } from '@models/TrainingPlan';
+import { CheckUser } from '@validations';
 
 @Inject(['TrainingPlanDAOImp'])
 @Route('/trainingPlan')
@@ -42,7 +43,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         }
 
         return {
-            statusCode: 404,
+            statusCode: 400,
             body: {
                 message: 'Corpo da requisição vazio.'
             }
@@ -68,7 +69,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         }
 
         return {
-            statusCode: 404,
+            statusCode: 400,
             body: {
                 message: 'Corpo da requisição vazio.'
             }
@@ -91,7 +92,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         }
 
         return {
-            statusCode: 404,
+            statusCode: 400,
             body: {
                 message: 'Plano de treino não existe.',
             },
@@ -127,7 +128,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
         }
 
         return {
-            statusCode: 404,
+            statusCode: 400,
             body: {
                 message: 'Plano de treino não existe.',
             },

@@ -63,9 +63,9 @@ export default class UserController implements IController<CreateUser, UpdateUse
     @Put('/')
     async update(req: IRequest<UpdateUser>): Promise<IResponse> {
         if (req.body) {
-            const { id, email, name, password } = req.body;
+            const { id, email, name, } = req.body;
 
-            new UpdateUserDTO(id, name as string, password as string, email as string);
+            new UpdateUserDTO(id, name as string, email as string);
 
             await this.entityDAO.update(req.body)
 

@@ -15,12 +15,31 @@ export class TrainingPlanDAOImp extends GenericDAOImp<
     }
 
     async findAllByUserId(userId: string): Promise<TrainingPlan[]> {
-        const plans = await prisma.trainingPlan.findMany({
-          where: {
-            userId,
-          }  
-        }) as unknown as TrainingPlan[];
+        const plans = await this.entity.findUnique({
+            where: {
+              userId,
+            }  
+          }) as unknown as TrainingPlan[];
 
         return plans
+    }
+
+
+    async checkIfDayExists(day: number, trainingPlanId: string): Promise<boolean> {
+        const result = await this.entity.findUnique({
+            where: {
+                id: trainingPlanId,
+            },
+
+            select: {
+                weekDayPlan: {
+                    where: {
+                        day,
+                    }
+                }
+            }
+        })
+
+        return result !== undefined && result !== null;
     }
 }
