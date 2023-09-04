@@ -7,7 +7,9 @@ import { Inject } from '@di';
 import Catch from 'error-handler';
 import { CheckWekDayPlanAndUser } from '@usecases/TrainingPlanUseCase';
 import { AuthRequired } from '../decorators/auth';
-import WeekDayPlanDTO from '../DTOS/WeekDayPlanDTO';
+import WeekDayPlanDTO from '../DTOS/weekDayPlan/WeekDayPlanDTO';
+import UpdateWeekDayPlanDTO from '../DTOS/weekDayPlan/UpdateWeekDayPlanDTO';
+import { CheckUser } from '@validations';
 
 @Inject(['WeekDayPlanDAOImp', 'TrainingPlanDAOImp'])
 @Route('/weekdayplan')
@@ -39,7 +41,7 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
                 };
             }
 
-            if (req.userId == dayExists.user.id) {
+            if (req.userId === dayExists.user.id) {
                 await this.entityDAO.add(req.body);
                 return {
                     statusCode: 200,
@@ -68,8 +70,38 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
     
     @Catch()
     @Put('/')
+    @AuthRequired()
     async update(req: IRequest<UpdateWeekDayPlan>): Promise<IResponse> {
-        throw new Error('Method not implemented.');
+        if (req.body) {
+            const { id, day, rest, trainingPlanId } = req.body;
+            new UpdateWeekDayPlanDTO(id as string, trainingPlanId as string, rest as boolean, day as number);
+            const dayExists = await this.trainingDAO.checkIfDayExists(day as number, trainingPlanId) as CheckWekDayPlanAndUser;
+
+            if (req.userId === dayExists.user.id) {
+                await this.entityDAO.update(req.body);
+                return {
+                    statusCode: 200,
+                    body: {
+                        message: 'Plano para o dia da semana atualizado com sucesso!',
+                    },
+                };
+            }
+
+            return {
+                statusCode: 401,
+                body: {
+                    message: 'Você não tem permissão para realizar essa função.',
+                },
+            };
+
+         }
+
+         return {
+            statusCode: 400,
+            body: {
+                message: 'Requisição sem corpo!'
+            }
+         }
     }
     
     @Catch()
