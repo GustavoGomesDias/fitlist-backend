@@ -6,7 +6,7 @@ export type IExercismDTO = Omit<CreateExercismController, 'time' | 'series'>
 
 export default class ExercismDTO implements IExercismDTO {
     @NotEmpty('Repetições')
-    public repetitions: number;
+    public serie: number;
 
     @NotEmpty('Dia da semana do exercício')
     public weekDayPlanId: string;
@@ -24,7 +24,7 @@ export default class ExercismDTO implements IExercismDTO {
     public userId: string;
 
     constructor(repetitions: number, weekDayPlanId: string, sequence: number, name: string, description: string, userId: string) {
-        this.repetitions = repetitions;
+        this.serie = repetitions;
         this.weekDayPlanId = weekDayPlanId;
         this.sequence = sequence
         this.name = name;

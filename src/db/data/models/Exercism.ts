@@ -2,8 +2,8 @@ export interface Exercism {
     id: string
     sequence: number
     time?: number
-    series?: number
-    repetitions: number
+    repetiton?: number
+    serie: number
     weekDayPlanId: string
     name: string
     description: string
