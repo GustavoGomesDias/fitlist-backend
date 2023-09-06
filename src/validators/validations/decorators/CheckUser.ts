@@ -3,7 +3,7 @@ import { BadRequestErr } from "@http-errors";
 import { TrainingPlan } from "@models/TrainingPlan";
 
 export type CheckUserParams = {
-	type: 'body' | 'params' | 'weekDayPlan' | 'exercism' | 'trainingPlan'
+	type: 'body' | 'params' | 'weekDayPlan' | 'exercism' | 'trainingPlan' | 'exercismBody'
 }
 
 
@@ -17,7 +17,15 @@ export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: strin
 
 		switch (type) {
 			case 'body':
+				console.log(args[0].userId);
+				console.log(args[0].body.id);
 				if (args[0].body.id !== args[0].userId) {
+					throw new BadRequestErr('Ação inválida.');
+				}
+				break;
+
+			case 'exercismBody':
+				if (args[0].body.userId !== args[0].userId) {
 					throw new BadRequestErr('Ação inválida.');
 				}
 				break;
@@ -40,7 +48,7 @@ export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: strin
 					throw new BadRequestErr('Ação inválida.');
 				}
 				break;
-		
+
 			default:
 				break;
 		}
