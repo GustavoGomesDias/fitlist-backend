@@ -24,6 +24,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
     @Catch()
     @Post('/')
     @AuthRequired()
+    @CheckUser({ type: 'body' })
     async create(req: IRequest<CreateTrainingPlan>): Promise<IResponse> {
         if (req.body) {
             const { name, userId, description } = req.body;
@@ -83,7 +84,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
     @Catch()
     @Get('/:id')
     @AuthRequired()
-    @CheckUser({ type: 'params' })
+    @CheckUser({ type: 'trainingPlan' })
     async findById(req: IRequest<unknown>): Promise<IResponse> {
         const planId = (req.params as { [key: string]: string }).id;
         const trainingPlan = await this.entityDAO.findById(planId) as TrainingPlan;
@@ -108,7 +109,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
     @Catch()
     @Delete('/:id')
     @AuthRequired()
-    @CheckUser({ type: 'params' })
+    @CheckUser({ type: 'trainingPlan' })
     async delete(req: IRequest<unknown>): Promise<IResponse> {
         const planId = (req.params as { [key: string]: string }).id;
         await this.entityDAO.delete(planId);
@@ -122,6 +123,7 @@ export default class TrainingPlanController implements IController<CreateTrainin
     }
     @Catch()
     @Get('/all/:userId')
+    @CheckUser({ type: 'params' })
     @AuthRequired()
     async findAllByUserId(req: IRequest): Promise<IResponse> {
         const userId = (req.params as { [key: string]: string }).id;

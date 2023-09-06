@@ -1,29 +1,47 @@
+import { TrainingPlanDAOImp } from "@DAO";
 import { BadRequestErr } from "@http-errors";
+import { TrainingPlan } from "@models/TrainingPlan";
 
 export type CheckUserParams = {
-  type: 'body' | 'params' | 'weekDayPlan' | 'exercism'
+	type: 'body' | 'params' | 'weekDayPlan' | 'exercism' | 'trainingPlan'
 }
 
 
 export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: string, descriptor: PropertyDescriptor) => {
-  const originalMethod = descriptor.value;
+	const originalMethod = descriptor.value;
 
-  descriptor.value = async function (...args: any) {
+	descriptor.value = async function (...args: any) {
 
-    if (type === 'body') {
-      if (args[0].body.id !== args[0].userId) {
-        throw new BadRequestErr('Ação inválida.');
-      }
-    }
+		const trainingPlan = new TrainingPlanDAOImp();
 
-    if (type !== 'params') {
-      if (args[0].params.id !== args[0].userId) {
-        throw new BadRequestErr('Ação inválida.');
-      }
-    }
+		switch (type) {
+			case 'body':
+				if (args[0].body.id !== args[0].userId) {
+					throw new BadRequestErr('Ação inválida.');
+				}
+				break;
+			case 'params':
+				if (args[0].params.id !== args[0].userId) {
+					throw new BadRequestErr('Ação inválida.');
+				}
+				break;
+			case 'trainingPlan':
+				const trainingInfo = await trainingPlan.findById(args[0].params.id) as TrainingPlan;
+				if (args[0].userId !== trainingInfo.userId) {
+					throw new BadRequestErr('Ação inválida.');
+				}
+				break;
+		
+			default:
+				break;
+		}
 
-    return await originalMethod.apply(this, args);
-  };
+		if (type === 'trainingPlan') {
 
-  return descriptor;
+		}
+
+		return await originalMethod.apply(this, args);
+	};
+
+	return descriptor;
 };
