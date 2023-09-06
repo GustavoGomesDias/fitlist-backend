@@ -1,15 +1,40 @@
 import { Prisma } from '@prisma/client';
 import { GenericDAOImp } from '../Generic/GenericDAOImp';
-import { CreateExercism, UpdateExercism } from '@usecases/ExercismUseCase';
+import { CreateExercismDAO, UpdateExercismDAO } from '@usecases/ExercismUseCase';
 import prisma from '@conn';
 
-export class ExercismnDAOImp extends GenericDAOImp<
-    CreateExercism,
+export interface FindTrainingPlanId {
+    weekDayPlan: {
+        trainingPlanId: string
+    }
+}
+
+export class ExercismDAOImp extends GenericDAOImp<
+    CreateExercismDAO,
     Prisma.userFindUniqueArgs,
-    UpdateExercism,
+    UpdateExercismDAO,
     string
 > {
     constructor() {
         super(prisma.exercism);
+    }
+
+
+    async findTrainingPlanId(id: string): Promise<string> {
+        const exercismTrainingPlanId = await prisma.exercism.findUnique({
+            where: {
+                id,
+            },
+
+            select: {
+                weekDayPlan: {
+                    select: {
+                        trainingPlanId: true,
+                    },
+                },
+            },
+        }) as unknown as FindTrainingPlanId;
+
+        return exercismTrainingPlanId.weekDayPlan.trainingPlanId;
     }
 }

@@ -5,4 +5,6 @@ export interface Exercism {
     series?: number
     repetitions: number
     weekDayPlanId: string
+    name: string
+    description: string
 }
