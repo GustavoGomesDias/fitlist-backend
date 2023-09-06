@@ -123,8 +123,8 @@ export default class TrainingPlanController implements IController<CreateTrainin
     }
     @Catch()
     @Get('/all/:userId')
-    @CheckUser({ type: 'params' })
     @AuthRequired()
+    @CheckUser({ type: 'params' })
     async findAllByUserId(req: IRequest): Promise<IResponse> {
         const userId = (req.params as { [key: string]: string }).id;
         const trainingPlans = await this.entityDAO.findAllByUserId(userId)

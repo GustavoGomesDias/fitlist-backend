@@ -59,6 +59,8 @@ model exercism {
   time          Int?
   series        Int?
   repetitions   Int
+  name          String
+  description   String
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @default(now())
   weekDayPlanId String

@@ -1,4 +1,4 @@
-import { TrainingPlanDAOImp } from "@DAO";
+import { ExercismDAOImp, FindTrainingPlanId, TrainingPlanDAOImp } from "@DAO";
 import { BadRequestErr } from "@http-errors";
 import { TrainingPlan } from "@models/TrainingPlan";
 
@@ -12,7 +12,8 @@ export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: strin
 
 	descriptor.value = async function (...args: any) {
 
-		const trainingPlan = new TrainingPlanDAOImp();
+		const trainingPlanDAO = new TrainingPlanDAOImp();
+		const exercismDAO = new ExercismDAOImp();
 
 		switch (type) {
 			case 'body':
@@ -26,8 +27,16 @@ export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: strin
 				}
 				break;
 			case 'trainingPlan':
-				const trainingInfo = await trainingPlan.findById(args[0].params.id) as TrainingPlan;
+				const trainingInfo = await trainingPlanDAO.findById(args[0].params.id) as TrainingPlan;
 				if (args[0].userId !== trainingInfo.userId) {
+					throw new BadRequestErr('Ação inválida.');
+				}
+				break;
+			case 'exercism':
+				const exercismId = args[0].params.id;
+				const trainingPlanId = await exercismDAO.findTrainingPlanId(exercismId);
+				const trainingExerInfo = await trainingPlanDAO.findById(trainingPlanId) as TrainingPlan;
+				if (args[0].userId !== trainingExerInfo.userId) {
 					throw new BadRequestErr('Ação inválida.');
 				}
 				break;

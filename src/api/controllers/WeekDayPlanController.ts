@@ -9,7 +9,6 @@ import { CheckWekDayPlanAndUser } from '@usecases/TrainingPlanUseCase';
 import { AuthRequired } from '../decorators/auth';
 import WeekDayPlanDTO from '../DTOS/weekDayPlan/WeekDayPlanDTO';
 import UpdateWeekDayPlanDTO from '../DTOS/weekDayPlan/UpdateWeekDayPlanDTO';
-import { CheckUser } from '@validations';
 import { WeekDayPlan } from '@models/WeekDayPlan';
 
 @Inject(['WeekDayPlanDAOImp', 'TrainingPlanDAOImp'])
