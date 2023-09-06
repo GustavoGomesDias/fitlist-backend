@@ -24,7 +24,7 @@ export default class ExercismController implements IController<CreateExercismCon
     @Catch()
     @Post('/')
     @AuthRequired()
-    @CheckUser({ type: 'body' })
+    @CheckUser({ type: 'exercismBody' })
     async create(req: IRequest<CreateExercismController>): Promise<IResponse> {
         if (req.body) {
             const { userId, ...rest } = req.body;
@@ -54,7 +54,7 @@ export default class ExercismController implements IController<CreateExercismCon
     @Catch()
     @Put('/')
     @AuthRequired()
-    @CheckUser({ type: 'body' })
+    @CheckUser({ type: 'exercismBody' })
     async update(req: IRequest<UpdateExercismController>): Promise<IResponse> {
         if (req.body) {
             const { id, userId, description, name, serie, sequence, repetiton, time, weekDayPlanId } = req.body;
