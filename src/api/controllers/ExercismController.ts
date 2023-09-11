@@ -29,8 +29,8 @@ export default class ExercismController implements IController<CreateExercismCon
         if (req.body) {
             const { userId, ...rest } = req.body;
 
-            const { description, weekDayPlanId, name, serie, sequence } = rest;
-            new ExercismDTO(serie, weekDayPlanId, sequence, name, description, userId);
+            const { description, weekDayPlanId, name, serie, sequence, timeOff } = rest;
+            new ExercismDTO(serie, weekDayPlanId, sequence, name, description, userId, timeOff);
 
             await this.entityDAO.add(rest);
 
@@ -57,9 +57,9 @@ export default class ExercismController implements IController<CreateExercismCon
     @CheckUser({ type: 'exercismBody' })
     async update(req: IRequest<UpdateExercismController>): Promise<IResponse> {
         if (req.body) {
-            const { id, userId, description, name, serie, sequence, repetiton, time, weekDayPlanId } = req.body;
+            const { id, userId, description, name, serie, sequence, repetiton, time, weekDayPlanId, timeOff } = req.body;
 
-            new UpdateExercismDTO(id, serie as number, weekDayPlanId as string, sequence as number, name as string, description as string, userId as string);
+            new UpdateExercismDTO(id, serie as number, weekDayPlanId as string, sequence as number, name as string, description as string, userId as string, timeOff as number);
 
             await this.entityDAO.update(req.body)
 

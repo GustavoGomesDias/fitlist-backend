@@ -23,12 +23,16 @@ export default class ExercismDTO implements IExercismDTO {
     @NotEmpty('Id do usuário')
     public userId: string;
 
-    constructor(repetitions: number, weekDayPlanId: string, sequence: number, name: string, description: string, userId: string) {
+    @NotEmpty('Tempo de descanso')
+    public timeOff: number;
+
+    constructor(repetitions: number, weekDayPlanId: string, sequence: number, name: string, description: string, userId: string, timeOff: number) {
         this.serie = repetitions;
         this.weekDayPlanId = weekDayPlanId;
         this.sequence = sequence
         this.name = name;
         this.description = description;
         this.userId = userId;
+        this.timeOff = timeOff;
     }
 }

@@ -27,7 +27,10 @@ export default class UpdateExercismDTO implements IUpdateExercismDTO {
     @NotEmpty('Id do usuário')
     public userId: string;
 
-    constructor(id: string, repetitions: number, weekDayPlanId: string, sequence: number, name: string, description: string, userId: string) {
+    @NotEmpty('Tempo de descanso')
+    public timeOff?: number
+
+    constructor(id: string, repetitions: number, weekDayPlanId: string, sequence: number, name: string, description: string, userId: string, timeOff: number) {
         this.id = id;
         this.repetitions = repetitions;
         this.weekDayPlanId = weekDayPlanId;
@@ -35,5 +38,6 @@ export default class UpdateExercismDTO implements IUpdateExercismDTO {
         this.name = name;
         this.description = description;
         this.userId = userId;
+        this.timeOff = timeOff;
     }
 }

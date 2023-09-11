@@ -7,4 +7,5 @@ export interface Exercism {
     weekDayPlanId: string
     name: string
     description: string
+    timeOff: number
 }

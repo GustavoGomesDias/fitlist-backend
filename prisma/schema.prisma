@@ -59,6 +59,7 @@ model exercism {
   time          Int?
   repetition    Int?
   serie         Int
+  timeOff       Int         @default(0)
   name          String
   description   String
   createdAt     DateTime    @default(now())
