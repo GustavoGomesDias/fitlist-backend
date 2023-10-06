@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import cors from 'cors';
 import express, { Express, Router } from 'express';
 import controllers from './api/controllers';
 import { IApiRouterDefinition } from './api/http/handlers/IRouterDifinition';
@@ -8,6 +9,14 @@ import { IResponse } from '@http';
 
 dotenv.config();
 
+const whiteList = [
+	'http://localhost:3000',
+  ];
+
+const options: cors.CorsOptions = {
+	origin: whiteList
+}
+
 @MakeDependencies()
 class App {
 	public app: Express;
@@ -16,7 +25,7 @@ class App {
 		this.app = express();
 		this.app.use(express.urlencoded({ limit: '100mb', extended: true }));
 		this.app.use(express.json({ limit: '100mb' }));
-		// this.app.use(cors(options));
+		this.app.use(cors(options));
 		this.makeRouter();
 	}
 
