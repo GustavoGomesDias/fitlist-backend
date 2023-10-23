@@ -59,6 +59,11 @@ export default class LoginController implements IController {
                         body: {
                             content: {
                                 token: payload,
+                                userInfo: {
+                                    email: user.email,
+                                    id: user.id,
+                                    name: user.name,
+                                },
                             },
                         },
                     };
