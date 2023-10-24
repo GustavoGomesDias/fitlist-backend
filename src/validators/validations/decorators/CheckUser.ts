@@ -17,8 +17,6 @@ export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: strin
 
 		switch (type) {
 			case 'body':
-				console.log(args[0].userId);
-				console.log(args[0].body.id);
 				if (args[0].body.id !== args[0].userId) {
 					throw new BadRequestErr('Ação inválida.');
 				}
