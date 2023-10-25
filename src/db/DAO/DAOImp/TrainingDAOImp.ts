@@ -15,10 +15,13 @@ export class TrainingPlanDAOImp extends GenericDAOImp<
     }
 
     async findAllByUserId(userId: string): Promise<TrainingPlan[]> {
-        const plans = await this.entity.findUnique({
+        const plans = await this.entity.findMany({
             where: {
               userId,
-            }  
+            } ,
+            orderBy: {
+                createdAt: 'desc'
+            },
           }) as unknown as TrainingPlan[];
 
         return plans

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,7 +15,6 @@ model user {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now())
   trainingPlan trainingPlan[]
-  // sharedTrainingPlan sharedTrainingPlan[]
 }
 
 model trainingPlan {
@@ -26,44 +22,34 @@ model trainingPlan {
   name        String
   description String?
   userId      String
-  user        user          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
+  user        user          @relation(fields: [userId], references: [id], onDelete: Cascade)
   weekDayPlan weekDayPlan[]
-  // sharedTrainingPlan sharedTrainingPlan[]
 }
 
-// TODO: Make shareble training plan
-// model sharedTrainingPlan {
-//   id String @id @default(uuid())
-
-//   sharedUserId String
-//   sharedUser   user         @relation(fields: [sharedUserId], references: [id])
-//   sharedPlanId String
-//   sharedPlan   trainingPlan @relation(fields: [sharedPlanId], references: [id])
-// }
-
 model weekDayPlan {
-  id        String   @id @default(uuid())
-  day       Int
-  rest      Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
+  id             String       @id @default(uuid())
+  day            Int
+  rest           Boolean
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now())
   trainingPlanId String
-  trainingPlan   trainingPlan @relation(fields: [trainingPlanId], references: [id])
   exercism       exercism[]
+  trainingPlan   trainingPlan @relation(fields: [trainingPlanId], references: [id], onDelete: Cascade)
 }
 
 model exercism {
   id            String      @id @default(uuid())
-  sequence      Int
   time          Int?
+  createdAt     DateTime    @default(now())
+  sequence      Int
+  updatedAt     DateTime    @default(now())
+  weekDayPlanId String
+  description   String
+  name          String
   repetition    Int?
   serie         Int
   timeOff       Int         @default(0)
-  name          String
-  description   String
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @default(now())
-  weekDayPlanId String
-  weekDayPlan   weekDayPlan @relation(fields: [weekDayPlanId], references: [id])
+  weekDayPlan   weekDayPlan @relation(fields: [weekDayPlanId], references: [id], onDelete: Cascade)
 }

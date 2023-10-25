@@ -37,10 +37,15 @@ export default class TrainingPlanController implements IController<CreateTrainin
                 description,
             });
 
+            const trainingPlans = await this.entityDAO.findAllByUserId(userId);
+
             return {
                 statusCode: 201,
                 body: {
-                    message: 'Plano de treino criado com sucesso!'
+                    message: 'Plano de treino criado com sucesso!',
+                    content: {
+                        trainingPlanId: trainingPlans[0].id,
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-import { CreateWeekDayPlan, UpdateWeekDayPlan } from '@usecases/WeekDayPlanUseCase';
+import { CreateWeekDayPlan, CreateWeekDayPlanRequest, UpdateWeekDayPlan } from '@usecases/WeekDayPlanUseCase';
 import { IController } from './IController';
 import { IRequest, IResponse } from '@http';
 import { TrainingPlanDAOImp, WeekDayPlanDAOImp } from '@DAO';
@@ -13,7 +13,7 @@ import { WeekDayPlan } from '@models/WeekDayPlan';
 
 @Inject(['WeekDayPlanDAOImp', 'TrainingPlanDAOImp'])
 @Route('/weekdayplan')
-export default class WeekDayPlanController implements IController<CreateWeekDayPlan, UpdateWeekDayPlan> {
+export default class WeekDayPlanController implements IController<CreateWeekDayPlanRequest, UpdateWeekDayPlan> {
     private entityDAO: WeekDayPlanDAOImp;
 
     private trainingDAO: TrainingPlanDAOImp;
@@ -26,35 +26,42 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
     @Catch()
     @AuthRequired()
     @Post('/')
-    async create(req: IRequest<CreateWeekDayPlan>): Promise<IResponse> {
+    async create(req: IRequest<CreateWeekDayPlanRequest>): Promise<IResponse> {
         if (req.body) {
-            const { day, rest, trainingPlanId } = req.body;
-            new WeekDayPlanDTO(rest, day, trainingPlanId);
-            const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(day, trainingPlanId) as CheckWekDayPlanAndUser;
+            const { rest, trainingPlanId } = req.body;
+            for (let i = 0; i < 6; i++) {
 
-            if (trainingInfo.weekDayPlan.length > 0) {
-                return {
-                    statusCode: 400,
-                    body: {
-                        error: 'Já existe um plano para o dia em questão.',
-                    },
-                };
-            }
+                const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(i, trainingPlanId) as CheckWekDayPlanAndUser;
+    
+                if (trainingInfo.weekDayPlan.length > 0) {
+                    return {
+                        statusCode: 400,
+                        body: {
+                            error: 'Já existe um plano para o dia em questão.',
+                        },
+                    };
+                }
+    
+                if (req.userId !== trainingInfo.user.id) {
+                    return {
+                        statusCode: 401,
+                        body: {
+                            error: 'Você não tem permissão para realizar essa função.',
+                        },
+                    };
+                }
 
-            if (req.userId === trainingInfo.user.id) {
-                await this.entityDAO.add(req.body);
-                return {
-                    statusCode: 201,
-                    body: {
-                        message: 'Plano para o dia da semana criado com sucesso!',
-                    },
-                };
+                await this.entityDAO.add({
+                    day: i,
+                    rest: i === rest,
+                    trainingPlanId,
+                });
             }
 
             return {
-                statusCode: 401,
+                statusCode: 201,
                 body: {
-                    error: 'Você não tem permissão para realizar essa função.',
+                    message: 'Plano para o dia da semana criado com sucesso!',
                 },
             };
 
