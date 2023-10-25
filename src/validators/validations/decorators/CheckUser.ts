@@ -34,7 +34,7 @@ export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: strin
 				break;
 			case 'trainingPlan':
 				const trainingInfo = await trainingPlanDAO.findById(args[0].params.id) as TrainingPlan;
-				if (args[0].body.userId !== trainingInfo.userId) {
+				if (args[0].userId !== trainingInfo.userId) {
 					throw new BadRequestErr('Ação inválida.');
 				}
 				break;
