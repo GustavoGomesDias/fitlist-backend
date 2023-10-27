@@ -140,6 +140,42 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
 
     @Catch()
     @AuthRequired()
+    @Get('/all/:id')
+    async findExercismByWeekDayPlanId(req: IRequest<unknown>): Promise<IResponse> {
+        const weekDayPlanId = (req.params as { [key: string]: string }).id;
+
+        const weekDayPlan = await this.entityDAO.findUniqueByData({
+            where: {
+                id: weekDayPlanId,
+            },
+
+            select: {
+                exercism: true,
+                trainingPlanId: true,       
+            },
+        }) as WeekDayPlan;
+
+        const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(0, weekDayPlan.trainingPlanId) as CheckWekDayPlanAndUser;
+
+        if (req.userId === trainingInfo.user.id) {
+            return {
+                statusCode: 200,
+                body: {
+                    content: weekDayPlan,
+                },
+            };
+        }
+
+        return {
+            statusCode: 401,
+            body: {
+                error: 'Você não tem autorização para acessar este dado.',
+            }
+        }
+    }
+
+    @Catch()
+    @AuthRequired()
     @Delete('/:id')
     async delete(req: IRequest<unknown>): Promise<IResponse> {
         const weekDayPlanId = (req.params as { [key: string]: string }).id;

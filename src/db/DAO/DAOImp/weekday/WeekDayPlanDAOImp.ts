@@ -6,12 +6,12 @@ import IWeekDayPlanDAO from './IWeekDauyPlanDAO';
 
 export class WeekDayPlanDAOImp extends GenericDAOImp<
     CreateWeekDayPlan,
-    Prisma.userFindUniqueArgs,
+    Prisma.weekDayPlanFindUniqueArgs,
     UpdateWeekDayPlan,
     string
 > implements IWeekDayPlanDAO<
     CreateWeekDayPlan,
-    Prisma.userFindUniqueArgs,
+    Prisma.weekDayPlanFindUniqueArgs,
     UpdateWeekDayPlan,
     string
 >{
