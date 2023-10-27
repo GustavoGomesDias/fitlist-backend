@@ -28,7 +28,8 @@ export const CheckUser = ({ type }: CheckUserParams) => (target: any, key: strin
 				}
 				break;
 			case 'params':
-				if (args[0].params.id !== args[0].userId) {
+				const idParams = args[0].params.id || args[0].params.userId;
+				if (idParams !== args[0].userId) {
 					throw new BadRequestErr('Ação inválida.');
 				}
 				break;
