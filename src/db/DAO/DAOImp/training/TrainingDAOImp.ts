@@ -1,15 +1,21 @@
 import { Prisma } from '@prisma/client';
-import { GenericDAOImp } from '../Generic/GenericDAOImp';
+import { GenericDAOImp } from '../../Generic/GenericDAOImp';
 import { CreateTrainingPlan, UpdateTrainingPlan } from '@usecases/TrainingPlanUseCase';
 import prisma from '@conn';
 import { TrainingPlan } from '@models/TrainingPlan';
+import ITrainingDAO from './ITrainingDAO';
 
 export class TrainingPlanDAOImp extends GenericDAOImp<
     CreateTrainingPlan,
     Prisma.trainingPlanFindUniqueArgs,
     UpdateTrainingPlan,
     string
-> {
+> implements ITrainingDAO<
+    CreateTrainingPlan,
+    Prisma.trainingPlanFindUniqueArgs,
+    UpdateTrainingPlan,
+    string
+>{
     constructor() {
         super(prisma.trainingPlan);
     }

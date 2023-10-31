@@ -92,7 +92,21 @@ export default class TrainingPlanController implements IController<CreateTrainin
     @CheckUser({ type: 'trainingPlan' })
     async findById(req: IRequest<unknown>): Promise<IResponse> {
         const planId = (req.params as { [key: string]: string }).id;
-        const trainingPlan = await this.entityDAO.findById(planId) as TrainingPlan;
+        const trainingPlan = await this.entityDAO.findUniqueByData({
+            where: {
+                id: planId,
+            },
+
+            select: {
+                weekDayPlan: true,
+                userId: true,
+                id: true,
+                name: true,
+                description: true,
+                createdAt: true,
+                updatedAt: true,
+            }
+        }) as TrainingPlan;
 
         if (trainingPlan) {
             return {

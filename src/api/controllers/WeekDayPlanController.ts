@@ -29,7 +29,7 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
     async create(req: IRequest<CreateWeekDayPlanRequest>): Promise<IResponse> {
         if (req.body) {
             const { rest, trainingPlanId } = req.body;
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 7; i++) {
 
                 const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(i, trainingPlanId) as CheckWekDayPlanAndUser;
     
@@ -118,6 +118,42 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
         const weekDayPlanId = (req.params as { [key: string]: string }).id;
 
         const weekDayPlan = await this.entityDAO.findById(weekDayPlanId) as WeekDayPlan;
+
+        const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(0, weekDayPlan.trainingPlanId) as CheckWekDayPlanAndUser;
+
+        if (req.userId === trainingInfo.user.id) {
+            return {
+                statusCode: 200,
+                body: {
+                    content: weekDayPlan,
+                },
+            };
+        }
+
+        return {
+            statusCode: 401,
+            body: {
+                error: 'Você não tem autorização para acessar este dado.',
+            }
+        }
+    }
+
+    @Catch()
+    @AuthRequired()
+    @Get('/all/:id')
+    async findExercismByWeekDayPlanId(req: IRequest<unknown>): Promise<IResponse> {
+        const weekDayPlanId = (req.params as { [key: string]: string }).id;
+
+        const weekDayPlan = await this.entityDAO.findUniqueByData({
+            where: {
+                id: weekDayPlanId,
+            },
+
+            select: {
+                exercism: true,
+                trainingPlanId: true,       
+            },
+        }) as WeekDayPlan;
 
         const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(0, weekDayPlan.trainingPlanId) as CheckWekDayPlanAndUser;
 

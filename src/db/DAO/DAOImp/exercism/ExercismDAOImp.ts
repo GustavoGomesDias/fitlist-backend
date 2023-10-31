@@ -1,7 +1,8 @@
 import { Prisma } from '@prisma/client';
-import { GenericDAOImp } from '../Generic/GenericDAOImp';
+import { GenericDAOImp } from '../../Generic/GenericDAOImp';
 import { CreateExercismDAO, UpdateExercismDAO } from '@usecases/ExercismUseCase';
 import prisma from '@conn';
+import IExercismDAO from './IExercismDAO';
 
 export interface FindTrainingPlanId {
     weekDayPlan: {
@@ -14,7 +15,12 @@ export class ExercismDAOImp extends GenericDAOImp<
     Prisma.userFindUniqueArgs,
     UpdateExercismDAO,
     string
-> {
+> implements IExercismDAO <
+    CreateExercismDAO,
+    Prisma.userFindUniqueArgs,
+    UpdateExercismDAO,
+    string
+>{
     constructor() {
         super(prisma.exercism);
     }
