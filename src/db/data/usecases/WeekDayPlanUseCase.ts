@@ -5,7 +5,8 @@ export type CreateWeekDayPlan = Omit<WeekDayPlan, 'id'>;
 
 export type CreateWeekDayPlanRequest = {
     rest: number, 
-    trainingPlanId: string
+    title:  string,
+    trainingPlanId: string,
 }
 
 export type UpdateWeekDayPlan = UpdateUseCase<WeekDayPlan, 'id' | 'trainingPlanId'>;

@@ -28,7 +28,7 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
     @Post('/')
     async create(req: IRequest<CreateWeekDayPlanRequest>): Promise<IResponse> {
         if (req.body) {
-            const { rest, trainingPlanId } = req.body;
+            const { rest, title,  trainingPlanId } = req.body;
             for (let i = 0; i < 7; i++) {
 
                 const trainingInfo = await this.trainingDAO.checkTrainingInfoWithDay(i, trainingPlanId) as CheckWekDayPlanAndUser;
@@ -53,6 +53,7 @@ export default class WeekDayPlanController implements IController<CreateWeekDayP
 
                 await this.entityDAO.add({
                     day: i,
+                    title,
                     rest: i === rest,
                     trainingPlanId,
                 });
